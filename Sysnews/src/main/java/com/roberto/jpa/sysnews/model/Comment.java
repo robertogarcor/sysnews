@@ -70,6 +70,11 @@ public class Comment extends AuditModel{
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	@Override
+	public String toString() {
+		return "Comment [id=" + id + ", description=" + description + ", adnew=" + adnew + ", user=" + user + "]";
+	}
 	
 	
 	

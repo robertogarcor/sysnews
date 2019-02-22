@@ -51,4 +51,55 @@ public class Adnew extends AuditModel {
 	@OneToMany(mappedBy = "adnew", cascade = CascadeType.ALL, targetEntity = Comment.class)
 	private List<Comment> comments = new ArrayList<>();
 	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Adnew [id=" + id + ", title=" + title + ", description=" + description + ", user=" + user
+				+ ", comments=" + comments + "]";
+	}
+	
+	
+	
+	
 }
