@@ -1,43 +1,67 @@
 package com.roberto.jpa.sysnews.model;
 
+import java.util.ArrayList;
+
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Entity
+@Table(name = "users")
+@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
 public class User extends AuditModel {
+
+	
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY, 
 					generator = "native")
+	@Column(name = "id")
 	private Long id;
 	
 	@NotNull(message = "This field can not be null. Please again.")
-	@Size(max = 50)
-	@Column(unique = true)
+	@Column(name = "username", length = 50, unique = true)
 	private String username;
 	
 	@NotNull(message = "This field can not be null. Please again.")
+	@Column(name = "password")
 	private String password;
 
-	@Size(max = 50)
+	@Column(name = "first_name", length = 50)
 	private String first_name;
 	
-	@Size(max = 50)
+	@Column(name = "last_name", length = 50)
 	private String last_name;
 	
 	@NotNull(message = "This field can not be null. Please again.")
-	@Column(unique = true)
+	@Column(name = "email", unique = true)
 	private String email;
 	
+	@Column(name = "image")
 	private String image;
 	
-	@Size(max = 256)
+	@Column(name = "description", length = 255)
 	private String description;
 	
+	// Default fetch is: FetchType.LAZY
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, targetEntity = Adnew.class)
+	private List<Adnew> adnews = new ArrayList<>();
 	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, targetEntity= Comment.class)
+	private List<Comment> comments = new ArrayList<>();
+	
+
 	public Long getId() {
 		return id;
 	}
@@ -95,6 +119,7 @@ public class User extends AuditModel {
 	}
 	
 	public String getDescription() {
+		
 		return description;
 	}
 	
@@ -102,5 +127,11 @@ public class User extends AuditModel {
 		this.description = description;
 	}
 	
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", first_name=" + first_name
+				+ ", last_name=" + last_name + ", email=" + email + ", image=" + image + ", description=" + description
+				+ ", adnews=" + adnews + "]";
+	}
 	
 }
