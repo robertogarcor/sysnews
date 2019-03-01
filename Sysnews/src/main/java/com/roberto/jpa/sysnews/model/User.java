@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,15 +14,28 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * Class Model User
+ * @author Roberto
+ * @version 23 feb. 2019 11:19:11
+ */
 
 @Entity
 @Table(name = "users")
-@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
+@JsonIgnoreProperties(
+		value  = {"createdAt", "updatedAt", "password", "isAdmin"},
+		allowSetters = true
+)
+@NamedQuery(name = "User.ckeckLogin", query = "SELECT u FROM User u WHERE username=?1 AND password=?2")
 public class User extends AuditModel {
 
-	
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -30,12 +44,15 @@ public class User extends AuditModel {
 	@Column(name = "id")
 	private Long id;
 	
+	@NotEmpty(message = "This field can not be null. Please again.")
 	@NotNull(message = "This field can not be null. Please again.")
-	@Column(name = "username", length = 50, unique = true)
+	@Column(name = "username", length = 50, unique = true, nullable = false)
 	private String username;
 	
+	@NotEmpty(message = "This field can not be null. Please again.")
 	@NotNull(message = "This field can not be null. Please again.")
-	@Column(name = "password")
+	@Column(name = "password", nullable = false)
+	@JsonProperty("password")
 	private String password;
 
 	@Column(name = "first_name", length = 50)
@@ -44,8 +61,9 @@ public class User extends AuditModel {
 	@Column(name = "last_name", length = 50)
 	private String last_name;
 	
+	@NotEmpty(message = "This field can not be null. Please again.")
 	@NotNull(message = "This field can not be null. Please again.")
-	@Column(name = "email", unique = true)
+	@Column(name = "email", unique = true, nullable = false)
 	private String email;
 	
 	@Column(name = "image")
@@ -77,6 +95,7 @@ public class User extends AuditModel {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	
 	
 	public String getPassword() {
 		return password;
