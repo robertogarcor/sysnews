@@ -14,9 +14,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * Abstract Class Auditory Date
+ * @author Roberto
+ */
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -36,11 +39,6 @@ public abstract class AuditModel implements Serializable {
 	@JsonProperty("updatedAt")
 	private Date updatedAt;
 	
-	@Column(name = "is_admin")
-	@JsonProperty("isAdmin")
-	@ColumnDefault("false")
-	private Boolean isAdmin = false;
-	
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -58,13 +56,7 @@ public abstract class AuditModel implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public Boolean getIsAdmin() {
-		return isAdmin;
-	}
-
-	public void setIsAdmin(Boolean isAdmin) {
-		this.isAdmin = isAdmin;
-	}
+	
 	
 	
 }

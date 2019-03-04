@@ -24,20 +24,24 @@ import org.springframework.web.bind.annotation.RestController;
 import com.roberto.jpa.sysnews.controller.UserAuthController;
 import com.google.gson.JsonObject;
 import com.roberto.jpa.sysnews.controller.ModelController;
+import com.roberto.jpa.sysnews.model.Token;
 import com.roberto.jpa.sysnews.model.User;
 import com.roberto.jpa.sysnews.service.UserAuthService;
 import com.roberto.jpa.sysnews.service.ModelService;
+import com.roberto.jpa.sysnews.service.TokenService;
 
 /**
- * Class UserController
+ * Class Management Request Mapping User Controller
  * @author Roberto
- * @version 23 feb. 2019 11:23:56
  */
+
 @RestController
 public class UserControllerImpl implements ModelController<User, String, Long>, UserAuthController {
 
 	@Autowired
 	private ModelService<User, Long> userService;
+	@Autowired
+	private TokenService tokenService;
 	@Autowired 
 	private HttpServletRequest context;
 	@Autowired
@@ -57,9 +61,11 @@ public class UserControllerImpl implements ModelController<User, String, Long>, 
 		try {
 			this.addInfoHeaders();
 			if (user.getUsername().length() > 0  & user.getPassword().length() > 0) {
-				if(userAuthService.login(user) != null) {
-					
-					return new ResponseEntity<User>(userAuthService.login(user), headers, HttpStatus.OK);	
+				User user_valid = userAuthService.login(user);
+				if(user_valid != null) {
+					Token token = tokenService.create(user_valid);
+					user_valid.setToken(token);
+					return new ResponseEntity<User>(user_valid, headers, HttpStatus.OK);	
 				}	
 			}
 		} catch (NoResultException e) {
@@ -72,6 +78,29 @@ public class UserControllerImpl implements ModelController<User, String, Long>, 
 		return null;
 		
 	}
+	
+	
+	@Override
+	@RequestMapping(value="/account/logout", method=RequestMethod.POST,
+						produces= {
+							MediaType.APPLICATION_JSON_UTF8_VALUE,
+							MediaType.APPLICATION_XML_VALUE
+						}
+					)	
+	public ResponseEntity<String> logout(@RequestBody User user) {
+		try {
+			this.addInfoHeaders();
+			userAuthService.logout(user);
+			JsonObject message = new JsonObject();
+			message.addProperty("message", "Successfully logout account. Token destroy.");
+			return new ResponseEntity<String>(message.toString(), headers, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	
 	
 	@Override
 	@RequestMapping(value="/account/register", method=RequestMethod.POST, 
@@ -184,10 +213,6 @@ public class UserControllerImpl implements ModelController<User, String, Long>, 
 
 	
 	
-	
-	
-
-	
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	
@@ -213,8 +238,6 @@ public class UserControllerImpl implements ModelController<User, String, Long>, 
 		}
 		
 	}
-	
-	
 
 
 }

@@ -6,9 +6,8 @@ import org.springframework.stereotype.Repository;
 import com.roberto.jpa.sysnews.model.User;
 
 /**
- * Interface ModelRespository
+ * Interface Entity User Respository
  * @author Roberto
- * @version 23 feb. 2019 11:20:39
  */
 
 @Repository

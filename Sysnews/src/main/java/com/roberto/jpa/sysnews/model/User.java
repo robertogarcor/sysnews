@@ -11,20 +11,26 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Class Model User
+ * Class Model Entity User
  * @author Roberto
- * @version 23 feb. 2019 11:19:11
  */
 
 @Entity
@@ -33,7 +39,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 		value  = {"createdAt", "updatedAt", "password", "isAdmin"},
 		allowSetters = true
 )
-@NamedQuery(name = "User.ckeckLogin", query = "SELECT u FROM User u WHERE username=?1 AND password=?2")
+@NamedQueries({
+	@NamedQuery(name = "User.login", 
+				query = "SELECT u FROM User u WHERE username=?1 AND password=?2"),
+	@NamedQuery(name = "User.logout",
+				query = "DELETE FROM Token t WHERE t.user.id=?1")
+})
 public class User extends AuditModel {
 
 	private static final long serialVersionUID = 1L;
@@ -72,6 +83,14 @@ public class User extends AuditModel {
 	@Column(name = "description", length = 255)
 	private String description;
 	
+	@Column(name = "is_admin")
+	@JsonProperty("isAdmin")
+	@ColumnDefault("false")
+	private Boolean isAdmin = false;
+	
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, targetEntity = Token.class)
+	private Token token;
+	
 	// Default fetch is: FetchType.LAZY
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, targetEntity = Adnew.class)
 	private List<Adnew> adnews = new ArrayList<>();
@@ -95,7 +114,6 @@ public class User extends AuditModel {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
 	
 	public String getPassword() {
 		return password;
@@ -138,7 +156,6 @@ public class User extends AuditModel {
 	}
 	
 	public String getDescription() {
-		
 		return description;
 	}
 	
@@ -146,6 +163,38 @@ public class User extends AuditModel {
 		this.description = description;
 	}
 	
+	public Boolean getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(Boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+	
+	public Token getToken() {
+		return token;
+	}
+
+	public void setToken(Token token) {
+		this.token = token;
+	}
+
+	public List<Adnew> getAdnews() {
+		return adnews;
+	}
+
+	public void setAdnews(List<Adnew> adnews) {
+		this.adnews = adnews;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", first_name=" + first_name

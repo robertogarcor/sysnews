@@ -9,6 +9,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Class Request Mapping Home Controller
+ * @author Roberto
+ */
+
 public class HomeControllerImpl {
 	
 	@Autowired 
@@ -35,5 +40,6 @@ public class HomeControllerImpl {
 			headers.add("Location", context.getScheme() + "://" + context.getServerName() + context.getRequestURI());
 		}	
 	}
+	
 
 }

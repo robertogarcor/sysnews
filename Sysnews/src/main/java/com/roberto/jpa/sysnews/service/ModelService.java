@@ -6,9 +6,8 @@ import java.util.Optional;
 import com.roberto.jpa.sysnews.model.User;
 
 /**
- * Interface ModelService Generic
+ * Interface Model Service Generic
  * @author Roberto
- * @version 23 feb. 2019 11:22:05
  * @param <T> Type entity
  * @param <ID> Type ID default Long
  */
@@ -21,8 +20,6 @@ public interface ModelService<T, ID> {
 	 * @throws Exception
 	 */
 	public T save(T entity) throws Exception;
-	
-	
 	
 	
 	/**

@@ -4,6 +4,11 @@ import org.springframework.http.ResponseEntity;
 
 import com.roberto.jpa.sysnews.model.User;
 
+/**
+ * Interface UserAuthController
+ * @author Roberto
+ */
+
 public interface UserAuthController {
 	
 	/**
@@ -14,5 +19,12 @@ public interface UserAuthController {
 	public ResponseEntity<User> login(User user);
 	
 	
-		
+	/**
+	 * Logout User
+	 * @param user logout
+	 * @return response string message
+	 */
+	public ResponseEntity<String> logout(User user);
+	
+			
 }

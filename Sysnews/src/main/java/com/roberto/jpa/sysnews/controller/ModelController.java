@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 /**
  * Interface ModelController generic
  * @author Roberto
- * @version 23 feb. 2019 11:19:27
  * @param <T> Type entity
  * @param <ID> Type ID default Long
  */
